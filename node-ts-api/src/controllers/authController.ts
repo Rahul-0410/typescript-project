@@ -60,7 +60,10 @@ export const login = async (req: Request, res: Response) => {
             expiresIn : "1hr",
         });
 
-        return res.status(200).cookie("token", token).json({success: true, message: "Login success", data: user} as IResponse);        
+        return res.status(200).cookie("token", token, {
+        httpOnly: true,
+        maxAge: 60 * 60 * 1000
+        }).json({success: true, message: "Login success", data: user} as IResponse);        
     } catch (error: any) {
         return res.status(500).json({success: false, message: error.message, data: null} as IResponse);
     }
@@ -70,9 +73,11 @@ export const logout = async(req: Request, res: Response) =>{
 
     try {
 
-        return res.status(200).cookie("token","").json({success:true, message: "Logout done", data: null} as IResponse);
+        return res.status(200).cookie("token","", {
+        httpOnly: true,
+        expires: new Date(0)
+    }).json({success:true, message: "Logout done", data: null} as IResponse);
 
-        
     } catch (error: any) {
         return res.status(500).json({success: false, message: error.message, data: null} as IResponse);
     }

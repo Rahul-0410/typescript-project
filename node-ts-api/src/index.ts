@@ -10,8 +10,9 @@ const port = process.env.PORT || 8080;
 
 //middleware
 app.use(cors({
-    origin : process.env.HOST_URL || "*"
-}))
+    origin: process.env.HOST_URL,
+    credentials: true
+}));
 
 app.use(express.json());
 
