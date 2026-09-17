@@ -1,6 +1,7 @@
 import {
     createContext,
     useContext,
+    useEffect,
     useState,
     type ReactNode,
 } from "react";
@@ -9,6 +10,7 @@ import {
     login as loginUser,
     logout as logoutUser,
     signup as signupUser,
+    getCurrentUser,
 } from "../services/authService";
 
 import type { User } from "../types/auth";
@@ -30,6 +32,7 @@ interface LoginData {
 
 interface AuthContextType {
     user: User | null;
+    loading: boolean;
     login: (data: LoginData) => Promise<void>;
     signup: (data: SignupData) => Promise<void>;
     logout: () => Promise<void>;
@@ -43,8 +46,33 @@ interface AuthProviderProps {
     children: ReactNode;
 }
 
-export const AuthProvider = ({ children }: AuthProviderProps) => {
+export const AuthProvider = ({
+    children,
+}: AuthProviderProps) => {
+
     const [user, setUser] = useState<User | null>(null);
+
+    // Used while checking whether the user is already logged in
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const checkAuth = async () => {
+            try {
+                const response = await getCurrentUser();
+
+                if (response.success && response.data) {
+                    setUser(response.data);
+                }
+            } catch (error) {
+                // No valid login cookie
+                setUser(null);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        checkAuth();
+    }, []);
 
     const login = async (data: LoginData) => {
         const response = await loginUser(data);
@@ -75,6 +103,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         <AuthContext.Provider
             value={{
                 user,
+                loading,
                 login,
                 signup,
                 logout,

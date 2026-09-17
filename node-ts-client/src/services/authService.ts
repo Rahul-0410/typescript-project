@@ -37,3 +37,11 @@ export const logout = async () => {
 
     return response.data;
 };
+
+export const getCurrentUser = async () => {
+    const response = await api.get<AuthResponse>(
+        "/auth/me"
+    );
+
+    return response.data;
+};

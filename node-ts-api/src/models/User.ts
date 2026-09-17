@@ -42,7 +42,7 @@ const userSchema = new Schema<IUser>({
     },
     role: {
         type: String,
-        enum: ["admin", "creator", "visitor"]
+        enum: ["admin", "creator", "visitor", "user"]
     },
     booksAdded: [
         {

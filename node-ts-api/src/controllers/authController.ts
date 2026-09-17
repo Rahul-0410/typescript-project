@@ -26,7 +26,7 @@ export const signup = async(req: Request, res: Response) =>{
  
         
     } catch (error: any) {
-        return res.json(500).json({success: false, message: error.message, data: null} as IResponse);
+        return res.status(500).json({success: false, message: error.message, data: null} as IResponse);
     }
 }
 
@@ -82,4 +82,34 @@ export const logout = async(req: Request, res: Response) =>{
         return res.status(500).json({success: false, message: error.message, data: null} as IResponse);
     }
 }
+
+export const getCurrentUser = async (
+    req: Request,
+    res: Response
+) => {
+    try {
+        const user = await User.findById(req.id);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+                data: null
+            } as IResponse);
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "User found",
+            data: user
+        } as IResponse);
+
+    } catch (error: any) {
+        return res.status(500).json({
+            success: false,
+            message: error.message,
+            data: null
+        } as IResponse);
+    }
+};
 
