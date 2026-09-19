@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getErrorMessage } from "../utils/getErrorMessage";
+import "./Books.css"
 
 import {
     getBooks,
@@ -79,71 +80,98 @@ const Books = () => {
         return <h2>Loading books...</h2>;
     }
 
-    if (error) {
-        return <h2>{error}</h2>;
-    }
+    // if (error) {
+    //     return <h2>{error}</h2>;
+    // }
 
     return (
-        <div>
-            <h1>Books</h1>
+    <div className="books-page">
+        <div className="books-container">
+
+            <div className="books-header">
+                <div>
+                    <h1>Books</h1>
+
+                    <p className="books-count">
+                        {books.length} {books.length === 1 ? "book" : "books"} available
+                    </p>
+                </div>
+            </div>
+            {error && (
+                <div className="error-message">
+                    {error}
+                </div>
+            )}
 
             {canModifyBooks && (
                 <BookForm
                     editingBook={editingBook}
                     onBookSaved={fetchBooks}
-                    onCancelEdit={() =>
-                        setEditingBook(null)
-                    }
+                    onCancelEdit={() => setEditingBook(null)}
                 />
             )}
 
-            <hr />
+            <br />
 
             {books.length === 0 ? (
-                <p>No books found.</p>
+                <div className="empty-books">
+                    <h2>No books found</h2>
+                    <p>There are currently no books available.</p>
+                </div>
             ) : (
-                books.map((book) => (
-                    <div key={book._id}>
-                        <h2>{book.name}</h2>
+                <div className="books-grid">
 
-                        <p>
-                            Author: {book.author}
-                        </p>
+                    {books.map((book) => (
+                        <div
+                            className="book-card"
+                            key={book._id}
+                        >
+                            <h2>{book.name}</h2>
 
-                        <p>
-                            Published: {book.publishYear}
-                        </p>
+                            <p className="book-author">
+                                By {book.author}
+                            </p>
 
-                        <p>
-                            {book.description}
-                        </p>
+                            <p className="book-year">
+                                Published: {book.publishYear}
+                            </p>
 
-                        {canModifyBooks && (
-                            <>
-                                <button
-                                    onClick={() =>
-                                        setEditingBook(book)
-                                    }
-                                >
-                                    Edit
-                                </button>
+                            <p className="book-description">
+                                {book.description}
+                            </p>
 
-                                <button
-                                    onClick={() =>
-                                        handleDelete(book._id)
-                                    }
-                                >
-                                    Delete
-                                </button>
-                            </>
-                        )}
+                            {canModifyBooks && (
+                                <div className="book-actions">
 
-                        <hr />
-                    </div>
-                ))
+                                    <button
+                                        className="btn btn-edit"
+                                        onClick={() =>
+                                            setEditingBook(book)
+                                        }
+                                    >
+                                        Edit
+                                    </button>
+
+                                    <button
+                                        className="btn btn-delete"
+                                        onClick={() =>
+                                            handleDelete(book._id)
+                                        }
+                                    >
+                                        Delete
+                                    </button>
+
+                                </div>
+                            )}
+                        </div>
+                    ))}
+
+                </div>
             )}
+
         </div>
-    );
+    </div>
+);
 };
 
 export default Books;

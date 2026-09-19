@@ -1,43 +1,26 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 import { useAuth } from "../context/AuthContext";
 import { getErrorMessage } from "../utils/getErrorMessage";
 
-interface SignupForm {
-    name: string;
-    email: string;
-    phone: string;
-    username: string;
-    password: string;
-    role: string;
-}
+import "./Auth.css";
 
 const Signup = () => {
-    const navigate = useNavigate();
     const { signup } = useAuth();
+    const navigate = useNavigate();
 
-    const [formData, setFormData] = useState<SignupForm>({
-        name: "",
-        email: "",
-        phone: "",
-        username: "",
-        password: "",
-        role: "",
-    });
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [role, setRole] = useState("user");
+
+    const [showPassword, setShowPassword] = useState(false);
 
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-
-    const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-    ) => {
-        const { name, value } = e.target;
-
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
-    };
 
     const handleSubmit = async (
         e: React.FormEvent<HTMLFormElement>
@@ -45,130 +28,195 @@ const Signup = () => {
         e.preventDefault();
 
         setError("");
+
+        if (password.length < 6) {
+            setError(
+                "Password must contain at least 6 characters"
+            );
+            return;
+        }
+
         setLoading(true);
 
         try {
-            await signup(formData);
+            await signup({
+                name,
+                email,
+                phone,
+                username,
+                password,
+                role,
+            });
 
-            navigate("/books");
-
+            // Signup does not create a JWT cookie.
+            // Therefore login is required after signup.
+            navigate("/login");
         } catch (error: unknown) {
-    setError(getErrorMessage(error, "Signup failed"));
+            setError(
+                getErrorMessage(error, "Signup failed")
+            );
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div>
-            <h1>Signup</h1>
+        <div className="auth-page">
 
-            <form onSubmit={handleSubmit}>
+            <div className="auth-card">
 
-                <div>
-                    <label>Name</label>
-
-                    <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        placeholder="Enter your name"
-                        required
-                    />
+                <div className="auth-header">
+                    <h1>Create Account</h1>
+                    <p>
+                        Create your BookStore account
+                    </p>
                 </div>
 
-                <div>
-                    <label>Email</label>
-
-                    <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder="Enter your email"
-                        required
-                    />
-                </div>
-
-                <div>
-                    <label>Phone</label>
-
-                    <input
-                        type="tel"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        placeholder="Enter your phone"
-                        required
-                    />
-                </div>
-
-                <div>
-                    <label>Username</label>
-
-                    <input
-                        type="text"
-                        name="username"
-                        value={formData.username}
-                        onChange={handleChange}
-                        placeholder="Choose a username"
-                        required
-                    />
-                </div>
-
-                <div>
-                    <label>Password</label>
-
-                    <input
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        placeholder="Create a password"
-                        required
-                    />
-                </div>
-
-                <div>
-                    <label>Role</label>
-
-                    <select
-                        name="role"
-                        value={formData.role}
-                        onChange={handleChange}
-                        required
-                    >
-                        <option value="">
-                            Select role
-                        </option>
-
-                        <option value="user">
-                            User
-                        </option>
-
-                        <option value="creator">
-                            Creator
-                        </option>
-
-                        <option value="admin">
-                            Admin
-                        </option>
-                    </select>
-                </div>
-
-                {error && (
-                    <p>{error}</p>
-                )}
-
-                <button
-                    type="submit"
-                    disabled={loading}
+                <form
+                    className="auth-form"
+                    onSubmit={handleSubmit}
                 >
-                    {loading ? "Creating account..." : "Signup"}
-                </button>
 
-            </form>
+                    <div className="auth-group">
+                        <label>Name</label>
+
+                        <input
+                            type="text"
+                            value={name}
+                            onChange={(e) =>
+                                setName(e.target.value)
+                            }
+                            placeholder="Enter your name"
+                            required
+                        />
+                    </div>
+
+                    <div className="auth-group">
+                        <label>Email</label>
+
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) =>
+                                setEmail(e.target.value)
+                            }
+                            placeholder="Enter your email"
+                            required
+                        />
+                    </div>
+
+                    <div className="auth-group">
+                        <label>Phone</label>
+
+                        <input
+                            type="tel"
+                            value={phone}
+                            onChange={(e) =>
+                                setPhone(e.target.value)
+                            }
+                            placeholder="Enter phone number"
+                            required
+                        />
+                    </div>
+
+                    <div className="auth-group">
+                        <label>Username</label>
+
+                        <input
+                            type="text"
+                            value={username}
+                            onChange={(e) =>
+                                setUsername(e.target.value)
+                            }
+                            placeholder="Choose a username"
+                            required
+                        />
+                    </div>
+
+                    <div className="auth-group">
+                        <label>Password</label>
+
+                        <div className="password-wrapper">
+
+                            <input
+                                type={
+                                    showPassword
+                                        ? "text"
+                                        : "password"
+                                }
+                                value={password}
+                                onChange={(e) =>
+                                    setPassword(e.target.value)
+                                }
+                                placeholder="Create a password"
+                                required
+                            />
+
+                            <button
+                                type="button"
+                                className="password-toggle"
+                                onClick={() =>
+                                    setShowPassword(!showPassword)
+                                }
+                            >
+                                {showPassword
+                                    ? "Hide"
+                                    : "Show"}
+                            </button>
+
+                        </div>
+                    </div>
+
+                    <div className="auth-group">
+                        <label>Role</label>
+
+                        <select
+                            value={role}
+                            onChange={(e) =>
+                                setRole(e.target.value)
+                            }
+                        >
+                            <option value="user">
+                                User
+                            </option>
+
+                            <option value="creator">
+                                Creator
+                            </option>
+
+                            <option value="admin">
+                                Admin
+                            </option>
+                        </select>
+                    </div>
+
+                    {error && (
+                        <div className="error-message">
+                            {error}
+                        </div>
+                    )}
+
+                    <button
+                        className="auth-button"
+                        type="submit"
+                        disabled={loading}
+                    >
+                        {loading
+                            ? "Creating account..."
+                            : "Create Account"}
+                    </button>
+
+                </form>
+
+                <div className="auth-footer">
+                    Already have an account?{" "}
+                    <Link to="/login">
+                        Login
+                    </Link>
+                </div>
+
+            </div>
+
         </div>
     );
 };

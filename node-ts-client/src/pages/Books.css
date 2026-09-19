@@ -1,0 +1,122 @@
+.books-page {
+    min-height: calc(100vh - 70px);
+    padding: 40px 0;
+}
+
+.books-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.books-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.books-header h1 {
+    font-size: 32px;
+}
+
+.books-count {
+    color: #6b7280;
+}
+
+
+.books-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.book-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.book-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.book-card h2 {
+    margin-bottom: 10px;
+    font-size: 22px;
+}
+
+.book-author {
+    color: #4b5563;
+    margin-bottom: 8px;
+}
+
+.book-year {
+    color: #6b7280;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.book-description {
+    color: #374151;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.book-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    border: none;
+    padding: 9px 16px;
+    border-radius: 6px;
+    color: white;
+    font-weight: 500;
+}
+
+.btn-edit {
+    background: #2563eb;
+}
+
+.btn-edit:hover {
+    background: #1d4ed8;
+}
+
+.btn-delete {
+    background: #dc2626;
+}
+
+.btn-delete:hover {
+    background: #b91c1c;
+}
+
+.empty-books {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 12px;
+    color: #6b7280;
+}
+
+@media (max-width: 600px) {
+    .books-page {
+        padding: 25px 0;
+    }
+
+    .books-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .books-header h1 {
+        font-size: 26px;
+    }
+}

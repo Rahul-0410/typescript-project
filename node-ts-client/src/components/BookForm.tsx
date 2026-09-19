@@ -6,6 +6,7 @@ import {
 
 import type { Book } from "../types/book";
 import { getErrorMessage } from "../utils/getErrorMessage";
+import "./BookForm.css"
 
 interface BookFormProps {
     onBookSaved: () => void;
@@ -103,78 +104,80 @@ const BookForm = ({
     };
 
     return (
-        <div>
-            <h2>
-                {editingBook
-                    ? "Edit Book"
-                    : "Add Book"}
-            </h2>
+    <div className="book-form-container">
 
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Book Name</label>
+        <h2>
+            {editingBook ? "Edit Book" : "Add New Book"}
+        </h2>
 
-                    <input
-                        type="text"
-                        value={name}
-                        onChange={(e) =>
-                            setName(e.target.value)
-                        }
-                        placeholder="Enter book name"
-                        required
-                    />
+        <form
+            className="book-form"
+            onSubmit={handleSubmit}
+        >
+
+            <div className="form-group">
+                <label>Book Name</label>
+
+                <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Enter book name"
+                    required
+                />
+            </div>
+
+            <div className="form-group">
+                <label>Author</label>
+
+                <input
+                    type="text"
+                    value={author}
+                    onChange={(e) => setAuthor(e.target.value)}
+                    placeholder="Enter author"
+                    required
+                />
+            </div>
+
+            <div className="form-group">
+                <label>Publish Year</label>
+
+                <input
+                    type="number"
+                    value={publishYear}
+                    onChange={(e) => setPublishYear(e.target.value)}
+                    placeholder="Enter publish year"
+                    required
+                />
+            </div>
+
+            <div className="form-group">
+                <label>Description</label>
+
+                <textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Enter book description"
+                    required
+                />
+            </div>
+
+            {error && (
+                <div className="error-message">
+                    {error}
                 </div>
+            )}
 
-                <div>
-                    <label>Author</label>
-
-                    <input
-                        type="text"
-                        value={author}
-                        onChange={(e) =>
-                            setAuthor(e.target.value)
-                        }
-                        placeholder="Enter author"
-                        required
-                    />
+            {success && (
+                <div className="success-message">
+                    {success}
                 </div>
+            )}
 
-                <div>
-                    <label>Publish Year</label>
-
-                    <input
-                        type="number"
-                        value={publishYear}
-                        onChange={(e) =>
-                            setPublishYear(e.target.value)
-                        }
-                        placeholder="Enter publish year"
-                        required
-                    />
-                </div>
-
-                <div>
-                    <label>Description</label>
-
-                    <textarea
-                        value={description}
-                        onChange={(e) =>
-                            setDescription(e.target.value)
-                        }
-                        placeholder="Enter description"
-                        required
-                    />
-                </div>
-
-                {error && (
-                    <p>{error}</p>
-                )}
-
-                {success && (
-                    <p>{success}</p>
-                )}
+            <div className="form-actions">
 
                 <button
+                    className="form-btn save-btn"
                     type="submit"
                     disabled={loading}
                 >
@@ -187,6 +190,7 @@ const BookForm = ({
 
                 {editingBook && (
                     <button
+                        className="form-btn cancel-btn"
                         type="button"
                         onClick={() => {
                             clearForm();
@@ -196,9 +200,12 @@ const BookForm = ({
                         Cancel
                     </button>
                 )}
-            </form>
-        </div>
-    );
+
+            </div>
+
+        </form>
+    </div>
+);
 };
 
 export default BookForm;
