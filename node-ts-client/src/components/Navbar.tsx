@@ -29,6 +29,14 @@ const Navbar = () => {
 
                 {user ? (
                     <>
+                        <Link to="/books">
+                            Books
+                        </Link>
+
+                        <Link to="/dashboard">
+                            Dashboard
+                        </Link>
+
                         <span>
                             Welcome, {user.name}
                         </span>

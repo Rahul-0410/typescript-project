@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { getErrorMessage } from "../utils/getErrorMessage";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -29,14 +30,9 @@ const Login = () => {
             });
 
             navigate("/books");
-        } catch (error: any) {
-    const message =
-        error.response?.data?.message ||
-        error.message ||
-        "Login failed";
-
-    setError(message);
-} finally {
+        } catch (error: unknown) {
+    setError(getErrorMessage(error, "Login failed"));
+        } finally {
             setLoading(false);
         }
     };

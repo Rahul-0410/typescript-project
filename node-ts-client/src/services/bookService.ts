@@ -1,20 +1,26 @@
 import api from "./api";
 import type { Book } from "../types/book";
 
-interface BookResponse {
+interface BooksResponse {
     success: boolean;
     message: string;
     data?: Book[];
 }
 
-interface SingleBookResponse {
+interface BookResponse {
     success: boolean;
     message: string;
     data?: Book;
 }
 
+interface DeleteBookResponse {
+    success: boolean;
+    message: string;
+    data?: null;
+}
+
 export const getBooks = async () => {
-    const response = await api.get<BookResponse>(
+    const response = await api.get<BooksResponse>(
         "/book/get-books"
     );
 
@@ -27,7 +33,7 @@ export const addBook = async (book: {
     publishYear: number;
     description: string;
 }) => {
-    const response = await api.post<SingleBookResponse>(
+    const response = await api.post<BookResponse>(
         "/book/add-book",
         book
     );
@@ -44,7 +50,7 @@ export const updateBook = async (
         description: string;
     }
 ) => {
-    const response = await api.put<SingleBookResponse>(
+    const response = await api.put<BookResponse>(
         `/book/update-book/${id}`,
         book
     );
@@ -53,7 +59,7 @@ export const updateBook = async (
 };
 
 export const deleteBook = async (id: string) => {
-    const response = await api.delete(
+    const response = await api.delete<DeleteBookResponse>(
         `/book/delete-book/${id}`
     );
 

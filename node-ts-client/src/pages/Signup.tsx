@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { getErrorMessage } from "../utils/getErrorMessage";
 
 interface SignupForm {
     name: string;
@@ -51,14 +52,8 @@ const Signup = () => {
 
             navigate("/books");
 
-        } catch (error: any) {
-            const message =
-                error.response?.data?.message ||
-                error.message ||
-                "Signup failed";
-
-            setError(message);
-
+        } catch (error: unknown) {
+    setError(getErrorMessage(error, "Signup failed"));
         } finally {
             setLoading(false);
         }
